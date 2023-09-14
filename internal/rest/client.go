@@ -47,6 +47,7 @@ type (
 		PathParameterer
 		BasicAuthenticator
 		Bodier
+		After(req *resty.Request) (*resty.Request, error)
 	}
 
 	// DummyRequester is used in structs that does not implement some of the Requester methods
@@ -92,6 +93,10 @@ func (DummyRequester) ToBasic() (string, string, error) {
 
 func (DummyRequester) ToBody() (any, error) {
 	return nil, ErrUnimplementedMethod
+}
+
+func (DummyRequester) After(req *resty.Request) (*resty.Request, error) {
+	return req, nil
 }
 
 func (GetDummyRequester) ToMethod() string {
@@ -165,6 +170,12 @@ func ReqGen[T Requester](cl *resty.Client, ctx context.Context, request T) (*res
 		return req, err
 	} else if err == nil && request.ToMethod() != http.MethodGet {
 		req = req.SetBody(body)
+	}
+
+	if r, err := request.After(req); err != nil && !errors.Is(err, ErrUnimplementedMethod) {
+		return req, err
+	} else if err == nil {
+		req = r
 	}
 
 	return req, nil
