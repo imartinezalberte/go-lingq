@@ -12,16 +12,23 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/
-package main
+*/package language
 
 import (
-	"github.com/imartinezalberte/go-lingq/cmd"
+	"github.com/spf13/cobra"
 
-	_ "github.com/imartinezalberte/go-lingq/cmd/context"
-	_ "github.com/imartinezalberte/go-lingq/cmd/language"
+	"github.com/imartinezalberte/go-lingq/cmd"
 )
 
-func main() {
-	cmd.Execute()
+// languagesCmd represents the languages command
+var languagesCmd = &cobra.Command{
+	Use:   "language",
+	Short: "Languages from lingq library",
+	Long:  `Languages from lingq library`,
+}
+
+func init() {
+	cmd.RootCmd.AddCommand(languagesCmd)
+
+	languagesCmd.AddCommand(getLanguagesCmd)
 }

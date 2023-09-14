@@ -13,15 +13,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package main
+package context
 
 import (
 	"github.com/imartinezalberte/go-lingq/cmd"
-
-	_ "github.com/imartinezalberte/go-lingq/cmd/context"
-	_ "github.com/imartinezalberte/go-lingq/cmd/language"
+	"github.com/spf13/cobra"
 )
 
-func main() {
-	cmd.Execute()
+// contextCmd represents the context command
+var contextCmd = &cobra.Command{
+	Use:   "context",
+	Short: "Helps to retrieve the possible contexts which user can use",
+	Long:  `Helps to retrieve the possible contexts which user can use`,
+}
+
+func init() {
+	cmd.RootCmd.AddCommand(contextCmd)
 }

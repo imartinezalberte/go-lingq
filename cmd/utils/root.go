@@ -1,4 +1,4 @@
-package cmd
+package utils
 
 import (
 	"encoding/json"
@@ -7,7 +7,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func handleResponse(cmd *cobra.Command, response any) {
+func HandleResponse(cmd *cobra.Command, response any, err error) {
+	if err != nil {
+		cmd.PrintErrln(err)
+		return
+	}
+
 	if k := reflect.TypeOf(response).Kind(); (k == reflect.Array || k == reflect.Slice) &&
 		reflect.ValueOf(response).Len() == 0 {
 		cmd.Println("nothing found")

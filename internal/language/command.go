@@ -11,7 +11,8 @@ type LanguagesQuery struct {
 	rest.GetDummyRequester
 	Code, Title string
 	Supported   *bool
-	ID          int
+	ID          uint
+	KnownWords  uint
 }
 
 func (lq LanguagesQuery) Filter() utils.Predicate[Language] {
@@ -25,13 +26,19 @@ func (lq LanguagesQuery) Filter() utils.Predicate[Language] {
 
 	if code := strings.ToLower(strings.TrimSpace(lq.Code)); code != utils.Empty {
 		conditions = append(conditions, func(l Language) bool {
-			return strings.Contains(strings.ToLower(l.Code), lq.Code)
+			return strings.Contains(strings.ToLower(l.Code), code)
 		})
 	}
 
 	if title := strings.ToLower(strings.TrimSpace(lq.Title)); title != utils.Empty {
 		conditions = append(conditions, func(l Language) bool {
-			return strings.Contains(strings.ToLower(l.Title), lq.Title)
+			return strings.Contains(strings.ToLower(l.Title), title)
+		})
+	}
+
+	if lq.KnownWords > 0 {
+		conditions = append(conditions, func(l Language) bool {
+			return l.KnownWords >= lq.KnownWords
 		})
 	}
 
