@@ -72,14 +72,14 @@ func init() {
 }
 
 func Args(cmd *cobra.Command, target *LanguageRequest, languageSupported *bool) {
-	cmd.PersistentFlags().
+	cmd.Flags().
 		StringVarP(&target.Title, TitleName, TitleShortName, TitleDefault, TitleUsage)
-	cmd.PersistentFlags().
+	cmd.Flags().
 		StringVarP(&target.Code, CodeName, CodeShortName, CodeDefault, CodeUsage)
-	cmd.PersistentFlags().
+	cmd.Flags().
 		BoolVarP(languageSupported, SupportedName, SupportedShortName, SupportedDefault, SupportedUsage)
-	cmd.PersistentFlags().
+	cmd.Flags().
 		UintVarP(&target.ID, IDName, IDShortName, IDDefault, IDUsage)
-	cmd.PersistentFlags().
+	cmd.Flags().
 		UintVarP(&target.KnownWords, KnownWordsName, KnownWordsShortName, KnownWordsDefault, KnownWordsUsage)
 }

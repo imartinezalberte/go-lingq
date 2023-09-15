@@ -19,6 +19,8 @@ import (
 	"github.com/imartinezalberte/go-lingq/cmd"
 
 	_ "github.com/imartinezalberte/go-lingq/cmd/context"
+	_ "github.com/imartinezalberte/go-lingq/cmd/course"
+	_ "github.com/imartinezalberte/go-lingq/cmd/course/create"
 	_ "github.com/imartinezalberte/go-lingq/cmd/language"
 )
 

@@ -20,13 +20,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// courseCmd represents the course command
-var courseCmd = &cobra.Command{
+// CourseCmd represents the course command
+var CourseCmd = &cobra.Command{
 	Use:   "course",
 	Short: "Handle CRUD of courses on lingq",
 	Long:  `Handle CRUD of courses on lingq`,
 }
 
 func init() {
-	cmd.RootCmd.AddCommand(courseCmd)
+	cmd.RootCmd.AddCommand(CourseCmd)
 }

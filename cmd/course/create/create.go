@@ -1,0 +1,90 @@
+/*
+Copyright © 2023 imartinezalberte
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/package create
+
+import (
+	contxt "context"
+	"time"
+
+	"github.com/imartinezalberte/go-lingq/cmd"
+	"github.com/imartinezalberte/go-lingq/cmd/course"
+	"github.com/imartinezalberte/go-lingq/cmd/utils"
+	"github.com/imartinezalberte/go-lingq/internal/config"
+	cour "github.com/imartinezalberte/go-lingq/internal/course"
+	"github.com/imartinezalberte/go-lingq/internal/rest"
+	"github.com/spf13/cobra"
+)
+
+var courseReq CourseRequest
+
+// createCourseCmd represents the course command
+var createCourseCmd = &cobra.Command{
+	Use:   "create",
+	Short: "Handle creation of courses on lingq",
+	Long:  `Handle creation of courses on lingq`,
+	Run: func(cmd *cobra.Command, _ []string) {
+		courseRes, err := postCourse()
+		utils.HandleResponse(cmd, courseRes, err)
+	},
+}
+
+func postCourse() (any, error) {
+	client, err := rest.DefaultClient(config.BaseURL)
+	if err != nil {
+		return nil, err
+	}
+
+	repo := cour.NewRepo(client.SetHeader("Authorization", "Token "+cmd.Token))
+	service := cour.NewService(repo)
+
+	ctx, cl := contxt.WithTimeout(contxt.Background(), 10*time.Second)
+	defer cl()
+
+	return cour.Execute(ctx, service, courseReq)
+}
+
+func init() {
+	course.CourseCmd.AddCommand(createCourseCmd)
+
+	Args(createCourseCmd, &courseReq)
+}
+
+func Args(cmd *cobra.Command, target *CourseRequest) {
+	cmd.Flags().
+		StringVar(&target.Title, TitleName, TitleDefault, TitleUsage)
+	cmd.Flags().
+		StringVar(&target.Language, LanguageName, LanguageDefault, LanguageUsage)
+	cmd.Flags().
+		StringVar(&target.Description, DescriptionName, DescriptionDefault, DescriptionUsage)
+	cmd.Flags().
+		StringVar(&target.SourceURL, SourceURLName, SourceURLDefault, SourceURLUsage)
+	cmd.Flags().
+		StringSliceVar(&target.Tags, TagsName, []string{}, TagsUsage)
+	cmd.Flags().StringVar(&target.Image, ImageName, ImageDefault, ImageUsage)
+	cmd.Flags().Var(&target.Level, LevelName, LevelUsage)
+
+	cmd.MarkFlagFilename(ImageName)
+
+	cmd.RegisterFlagCompletionFunc(
+		LevelName,
+		func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+			return Levels[:], cobra.ShellCompDirectiveDefault
+		},
+	)
+
+	cmd.MarkFlagRequired(TitleName)
+	cmd.MarkFlagRequired(LanguageName)
+	cmd.MarkFlagRequired(LevelName)
+}

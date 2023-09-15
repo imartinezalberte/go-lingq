@@ -75,11 +75,11 @@ func init() {
 }
 
 func Args(cmd *cobra.Command, target *ContextRequest) {
-	cmd.PersistentFlags().
+	cmd.Flags().
 		StringVar(&target.Intense, IntenseName, IntenseDefault, IntenseUsage)
-	cmd.PersistentFlags().
+	cmd.Flags().
 		UintVar(&target.Identifier, IdentifierName, IdentifierDefault, IdentifierUsage)
-	cmd.PersistentFlags().
+	cmd.Flags().
 		UintVar(&target.StreakDays, StreakDaysName, StreakDaysDefault, StreakDaysUsage)
 
 	language.Args(cmd, &target.Language, &languageSupported)
