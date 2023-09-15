@@ -13,17 +13,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package main
+package course
 
 import (
 	"github.com/imartinezalberte/go-lingq/cmd"
-
-	_ "github.com/imartinezalberte/go-lingq/cmd/context"
-	_ "github.com/imartinezalberte/go-lingq/cmd/course"
-	_ "github.com/imartinezalberte/go-lingq/cmd/course/create"
-	_ "github.com/imartinezalberte/go-lingq/cmd/language"
+	"github.com/spf13/cobra"
 )
 
-func main() {
-	cmd.Execute()
+// CourseCmd represents the course command
+var CourseCmd = &cobra.Command{
+	Use:   "course",
+	Short: "Handle CRUD of courses on lingq",
+	Long:  `Handle CRUD of courses on lingq`,
+}
+
+func init() {
+	cmd.RootCmd.AddCommand(CourseCmd)
 }
