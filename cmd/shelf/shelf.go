@@ -13,19 +13,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package main
+package cmd
 
 import (
 	"github.com/imartinezalberte/go-lingq/cmd"
-
-	_ "github.com/imartinezalberte/go-lingq/cmd/context"
-	_ "github.com/imartinezalberte/go-lingq/cmd/course"
-	_ "github.com/imartinezalberte/go-lingq/cmd/course/create"
-	_ "github.com/imartinezalberte/go-lingq/cmd/language"
-	_ "github.com/imartinezalberte/go-lingq/cmd/shelf"
-	_ "github.com/imartinezalberte/go-lingq/cmd/shelf/get"
+	"github.com/spf13/cobra"
 )
 
-func main() {
-	cmd.Execute()
+// ShelfCmd represents the shelf command
+var ShelfCmd = &cobra.Command{
+	Use:   "shelf",
+	Short: "Play around with selves",
+	Long:  `Play around with selves`,
+}
+
+func init() {
+	cmd.RootCmd.AddCommand(ShelfCmd)
 }
