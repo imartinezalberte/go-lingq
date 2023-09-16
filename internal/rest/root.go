@@ -26,7 +26,8 @@ func NewClient(cl *http.Client, logger log.ILogger, host string) (*resty.Client,
 		SetTimeout(defaultTimeout).
 		SetRetryCount(defaultRetryCount).
 		SetRetryWaitTime(defaultRetryWaitTime).
-		SetRetryMaxWaitTime(defaultRetryMaxWaitTime)
+		SetRetryMaxWaitTime(defaultRetryMaxWaitTime).
+		SetDebug(true)
 
 	c.OnBeforeRequest(OnBeforeRequest(logger)).
 		OnAfterResponse(OnAfterResponse(logger)).
