@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"strings"
 
+	e "github.com/imartinezalberte/go-lingq/internal/entities"
 	"github.com/imartinezalberte/go-lingq/internal/utils"
 	"github.com/repeale/fp-go"
 )
@@ -70,6 +71,10 @@ func (r *ResourceLevel) Check(input string) bool {
 		return false
 	}
 	return true
+}
+
+func (r ResourceLevel) ToDomain() (level e.ResourceLevel, err error) {
+	return level, level.Set(r.String())
 }
 
 func (rr ResourcesLevel) InnerType() utils.Set[ResourceLevel] {

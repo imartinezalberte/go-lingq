@@ -1,4 +1,4 @@
-package pagination
+package entities
 
 import (
 	"net/url"
@@ -11,8 +11,8 @@ const (
 )
 
 type Pagination struct {
-	Page uint
-	Size uint
+	Page uint `url:"page"`
+	Size uint `url:"size"`
 }
 
 func NewPagination(page, size uint) Pagination {
