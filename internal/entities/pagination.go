@@ -8,20 +8,23 @@ import (
 const (
 	PageQueryParamName     = "page"
 	PageSizeQueryParamName = "page_size"
+
+	PageDefault     = 1
+	PageSizeDefault = 20
 )
 
 type Pagination struct {
 	Page uint `url:"page"`
-	Size uint `url:"size"`
+	Size uint `url:"page_size"`
 }
 
 func NewPagination(page, size uint) Pagination {
 	if page == 0 {
-		page = 1
+		page = PageDefault
 	}
 
 	if size < 1 {
-		size = 20
+		size = PageSizeDefault
 	}
 
 	return Pagination{page, size}

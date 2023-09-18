@@ -22,7 +22,7 @@ var (
 )
 
 func (r *ResourceType) Set(input string) error {
-	if r.Check(input) {
+	if !r.Check(input) {
 		return errors.New("unknown resource type")
 	}
 	return nil

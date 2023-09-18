@@ -28,7 +28,7 @@ func (r ResourceStatus) String() string {
 }
 
 func (r *ResourceStatus) Set(input string) error {
-	if r.Check(input) {
+	if !r.Check(input) {
 		return errors.New("unknown resource status")
 	}
 	return nil

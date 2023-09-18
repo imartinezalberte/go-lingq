@@ -21,7 +21,7 @@ const (
 )
 
 var (
-	Levels          = [...]string{"A1", "A2", "B1", "B2", "C1", "C2"}
+	Levels          = [...]string{"a1", "a2", "b1", "b2", "c1", "c2"}
 	UnmarshalLevels = [...]string{
 		"beginner 1",
 		"beginner 2",
@@ -65,7 +65,7 @@ func (r ResourceLevel) String() string {
 		return "unknown"
 	}
 
-	return Levels[index]
+	return strings.ToUpper(Levels[index])
 }
 
 func (r ResourceLevel) EncodeValues(key string, v *url.Values) error {

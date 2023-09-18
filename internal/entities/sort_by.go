@@ -29,7 +29,7 @@ var SortByValues = [...]string{
 
 func (s *SortBy) Set(input string) error {
 	if !s.Check(input) {
-		return errors.New("unkown sort type")
+		return errors.New("unknown sort type")
 	}
 	return nil
 }
@@ -46,7 +46,7 @@ func (s *SortBy) Check(input string) bool {
 		*s = NewestSort
 	case SortByValues[4], "4":
 		*s = LessDifficultSort
-	case SortByValues[4], "5":
+	case SortByValues[5], "5":
 		*s = AlphabeticalSort
 	default:
 		return false
