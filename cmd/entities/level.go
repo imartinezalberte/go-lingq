@@ -8,6 +8,7 @@ import (
 	e "github.com/imartinezalberte/go-lingq/internal/entities"
 	"github.com/imartinezalberte/go-lingq/internal/utils"
 	"github.com/repeale/fp-go"
+	"github.com/spf13/cobra"
 )
 
 const (
@@ -75,6 +76,16 @@ func (r *ResourceLevel) Check(input string) bool {
 
 func (r ResourceLevel) ToDomain() (level e.ResourceLevel, err error) {
 	return level, level.Set(r.String())
+}
+
+func (r *ResourceLevel) Args(cmd *cobra.Command) {
+	cmd.Flags().Var(r, LevelName, LevelUsage)
+	cmd.RegisterFlagCompletionFunc(
+		ResourceStatusName,
+		func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+			return Levels[:], cobra.ShellCompDirectiveDefault
+		},
+	)
 }
 
 func (rr ResourcesLevel) InnerType() utils.Set[ResourceLevel] {

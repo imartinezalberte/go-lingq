@@ -11,17 +11,27 @@ import (
 
 const ImageFileParamName string = "image"
 
-type CourseCommand struct {
-	rest.PostDummyRequester
-	Image       string
-	Title       string `example:"eventyr for barn"`
-	Language    string `example:"no"`
-	Description string `example:"Du vil lære å lese eventyr for barn"`
-	Level       uint   `example:"2"`
-	SourceURL   string `example:"https://www.barneforlaget.no/hør-så-mye-du-vil"`
-	Tags        Tags
-}
+type (
+	CourseCommand struct {
+		rest.PostDummyRequester
+		Image       string
+		Title       string `example:"eventyr for barn"`
+		Language    string `example:"no"`
+		Description string `example:"Du vil lære å lese eventyr for barn"`
+		Level       uint   `example:"2"`
+		SourceURL   string `example:"https://www.barneforlaget.no/hør-så-mye-du-vil"`
+		Tags        Tags
+	}
 
+	CourseQuery struct {
+		rest.GetDummyRequester
+		ID       uint
+		Title    string
+		Language string
+	}
+)
+
+// CourseCommand
 func (c CourseCommand) ToBody() (any, error) {
 	if c.Image != utils.Empty {
 		// We are not using simple json, we have to use multipart/form-data
@@ -68,3 +78,6 @@ func (c CourseCommand) FormData() url.Values {
 func (c CourseCommand) Files() map[string]string {
 	return map[string]string{ImageFileParamName: c.Image}
 }
+
+// CourseQuery
+func (c CourseQuery) Filter() {}

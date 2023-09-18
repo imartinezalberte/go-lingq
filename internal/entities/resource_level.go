@@ -12,7 +12,8 @@ import (
 type ResourceLevel uint
 
 const (
-	FirstLevel ResourceLevel = iota
+	_ ResourceLevel = iota
+	FirstLevel
 	SecondLevel
 	ThirdLevel
 	FourthLevel
@@ -60,7 +61,7 @@ func (r *ResourceLevel) Check(input string) bool {
 }
 
 func (r ResourceLevel) String() string {
-	index := int(r)
+	index := int(r) - 1
 	if index >= len(Levels) {
 		return "unknown"
 	}
@@ -74,5 +75,10 @@ func (r ResourceLevel) EncodeValues(key string, v *url.Values) error {
 }
 
 func (r *ResourceLevel) UnmarshalJSON(input []byte) error {
-	return r.Set(strings.Trim(string(input), utils.Quote))
+	sanitized := strings.Trim(string(input), utils.Quote)
+	if sanitized == "null" {
+		return nil
+	}
+
+	return r.Set(sanitized)
 }

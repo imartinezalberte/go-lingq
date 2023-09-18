@@ -1,14 +1,11 @@
 package search
 
-import (
-	"time"
-
-	"github.com/imartinezalberte/go-lingq/internal/entities"
-)
+import "github.com/imartinezalberte/go-lingq/internal/entities"
 
 type (
 	SearchResource struct {
 		ID           uint                    `json:"id"`
+		Title        string                  `json:"title"`
 		Type         entities.ResourceType   `json:"type"`
 		Status       entities.ResourceStatus `json:"status"`
 		Source       ResourceSource          `json:"source"`
@@ -23,7 +20,7 @@ type (
 		NewWordsCount   uint                   `json:"newWordsCount"`
 		Difficulty      float32                `json:"difficulty"`
 		Level           entities.ResourceLevel `json:"level"`
-		Date            time.Time              `json:"date"`
+		Date            entities.DateOnly      `json:"date"`
 		Tags            []string               `json:"tags"`
 		URL             string                 `json:"url"`
 	}

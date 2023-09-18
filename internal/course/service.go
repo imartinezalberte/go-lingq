@@ -13,13 +13,22 @@ type (
 		r PostCourseRepoAction
 	}
 
+	GetCoursesService interface {
+		GetCourses(context.Context, CourseQuery) (Courses, error)
+	}
+
+	getCoursesService struct {
+		r GetCoursesRepoAction
+	}
+
 	Service struct {
 		postCourseService PostCourseService
+		getCoursesService GetCoursesService
 	}
 )
 
 func NewService(r Repo) Service {
-	return Service{&postCourseService{r}}
+	return Service{&postCourseService{r}, &getCoursesService{r}}
 }
 
 func Execute[T interface{ ToCommand() any }](
@@ -30,6 +39,8 @@ func Execute[T interface{ ToCommand() any }](
 	switch cmd := cmd.ToCommand().(type) {
 	case CourseCommand:
 		return svc.postCourseService.PostCourse(ctx, cmd)
+	case CourseQuery:
+		return svc.getCoursesService.GetCourses(ctx, cmd)
 	}
 	return nil, nil
 }
@@ -39,4 +50,8 @@ func (g *postCourseService) PostCourse(
 	cmd CourseCommand,
 ) (Course, error) {
 	return g.r.PostCourse(ctx, cmd)
+}
+
+func (g *getCoursesService) GetCourses(ctx context.Context, query CourseQuery) (Courses, error) {
+	return Courses{}, nil
 }

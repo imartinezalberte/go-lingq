@@ -17,7 +17,7 @@ const (
 )
 
 var (
-	ResourceTypeValues          = [...]string{"collections", "content"}
+	ResourceTypeValues          = [...]string{"collection", "content"}
 	ResourceTypeUnmarshalValues = [...]string{"courses", "lessons"}
 )
 

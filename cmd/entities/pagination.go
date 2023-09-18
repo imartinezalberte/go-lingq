@@ -29,7 +29,7 @@ func (p Pagination) ToCommand() e.Pagination {
 	return e.NewPagination(p.Page, p.Size)
 }
 
-func (Pagination) Args(cmd *cobra.Command, target *Pagination) {
-	cmd.Flags().UintVar(&target.Page, PageName, PageDefault, PageUsage)
-	cmd.Flags().UintVar(&target.Size, SizeName, SizeDefault, SizeUsage)
+func (p *Pagination) Args(cmd *cobra.Command) {
+	cmd.Flags().UintVar(&p.Page, PageName, PageDefault, PageUsage)
+	cmd.Flags().UintVar(&p.Size, SizeName, SizeDefault, SizeUsage)
 }

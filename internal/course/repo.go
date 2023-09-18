@@ -10,6 +10,7 @@ import (
 const (
 	LanguageIDPathParam = "languageID"
 	PostCoursesEndpoint = "/{" + LanguageIDPathParam + "}/collections/"
+	GetCoursesEndpoint  = "/{" + LanguageIDPathParam + "}/collections/"
 )
 
 type (
@@ -17,8 +18,13 @@ type (
 		PostCourse(context.Context, CourseCommand) (Course, error)
 	}
 
+	GetCoursesRepoAction interface {
+		GetCourses(context.Context, CourseQuery) (Courses, error)
+	}
+
 	Repo interface {
 		PostCourseRepoAction
+		GetCoursesRepoAction
 	}
 
 	repo struct {
@@ -36,5 +42,14 @@ func (r *repo) PostCourse(ctx context.Context, cmd CourseCommand) (Course, error
 		ctx,
 		cmd,
 		PostCoursesEndpoint,
+	)
+}
+
+func (r *repo) GetCourses(ctx context.Context, query CourseQuery) (Courses, error) {
+	return rest.Exec[CourseQuery, rest.DummyAPIResponseErr, Courses](
+		r.cl,
+		ctx,
+		query,
+		GetCoursesEndpoint,
 	)
 }

@@ -16,17 +16,47 @@ limitations under the License.
 package get
 
 import (
-	cmd "github.com/imartinezalberte/go-lingq/cmd/search"
+	"context"
+	"time"
+
+	"github.com/imartinezalberte/go-lingq/cmd"
+	searchCmd "github.com/imartinezalberte/go-lingq/cmd/search"
+	"github.com/imartinezalberte/go-lingq/cmd/utils"
+	"github.com/imartinezalberte/go-lingq/internal/config"
+	"github.com/imartinezalberte/go-lingq/internal/rest"
+	"github.com/imartinezalberte/go-lingq/internal/search"
 	"github.com/spf13/cobra"
 )
+
+var searchResources SearchResources
 
 // GetSearchCmd represents the search command
 var GetSearchCmd = &cobra.Command{
 	Use:   "get",
 	Short: "",
 	Long:  ``,
+	Run: func(cmd *cobra.Command, _ []string) {
+		resources, err := getResources()
+		utils.HandleResponse(cmd, resources, err)
+	},
+}
+
+func getResources() (any, error) {
+	client, err := rest.DefaultClient(config.BaseURL)
+	if err != nil {
+		return nil, err
+	}
+
+	repo := search.NewRepo(client.SetHeader("Authorization", "Token "+cmd.Token))
+	service := search.NewService(repo)
+
+	ctx, cl := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cl()
+
+	return search.Execute(ctx, service, searchResources)
 }
 
 func init() {
-	cmd.SearchCmd.AddCommand(GetSearchCmd)
+	searchCmd.SearchCmd.AddCommand(GetSearchCmd)
+	searchResources.Args(GetSearchCmd)
 }

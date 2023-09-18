@@ -13,7 +13,8 @@ type (
 	Tags []Tag
 	Tag  string
 
-	Course struct {
+	Courses []Course
+	Course  struct {
 		ID               uint    `json:"id"`
 		URL              string  `json:"url"`
 		Title            string  `json:"title"`

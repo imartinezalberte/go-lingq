@@ -5,6 +5,12 @@ import (
 	"strings"
 
 	e "github.com/imartinezalberte/go-lingq/internal/entities"
+	"github.com/spf13/cobra"
+)
+
+const (
+	ResourceTypeName  = "resource-type"
+	ResourceTypeUsage = "specify the type of resource that you want to look for: colletions or content"
 )
 
 type ResourceType uint
@@ -15,12 +21,16 @@ const (
 )
 
 var (
-	ResourceTypeValues          = [...]string{"collections", "content"}
+	ResourceTypeValues          = [...]string{"collection", "content"}
 	ResourceTypeUnmarshalValues = [...]string{"courses", "lessons"}
 )
 
+func (r *ResourceType) Type() string {
+	return "ResourceType"
+}
+
 func (r *ResourceType) Set(input string) error {
-	if r.Check(input) {
+	if !r.Check(input) {
 		return errors.New("unknown resource type")
 	}
 	return nil
@@ -49,4 +59,14 @@ func (r ResourceType) String() string {
 
 func (r ResourceType) ToDomain() (t e.ResourceType, err error) {
 	return t, t.Set(r.String())
+}
+
+func (r *ResourceType) Args(cmd *cobra.Command) {
+	cmd.Flags().Var(r, ResourceTypeName, ResourceTypeUsage)
+	cmd.RegisterFlagCompletionFunc(
+		ResourceTypeName,
+		func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
+			return ResourceTypeValues[:], cobra.ShellCompDirectiveDefault
+		},
+	)
 }
