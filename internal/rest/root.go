@@ -26,8 +26,7 @@ func NewClient(cl *http.Client, logger log.ILogger, host string) (*resty.Client,
 		SetTimeout(defaultTimeout).
 		SetRetryCount(defaultRetryCount).
 		SetRetryWaitTime(defaultRetryWaitTime).
-		SetRetryMaxWaitTime(defaultRetryMaxWaitTime).
-		SetDebug(true)
+		SetRetryMaxWaitTime(defaultRetryMaxWaitTime)
 
 	c.OnBeforeRequest(OnBeforeRequest(logger)).
 		OnAfterResponse(OnAfterResponse(logger)).
@@ -39,7 +38,7 @@ func NewClient(cl *http.Client, logger log.ILogger, host string) (*resty.Client,
 }
 
 func DefaultClient(host string) (*resty.Client, error) {
-	return NewClient(http.DefaultClient, log.DefaultLogger(), host)
+	return NewClient(http.DefaultClient, log.DefaultLogger(zapcore.WarnLevel), host)
 }
 
 func OnBeforeRequest(logger log.ILogger) func(*resty.Client, *resty.Request) error {
