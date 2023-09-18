@@ -5,6 +5,7 @@ import (
 	con "github.com/imartinezalberte/go-lingq/internal/context"
 	lang "github.com/imartinezalberte/go-lingq/internal/language"
 	"github.com/imartinezalberte/go-lingq/internal/utils"
+	"github.com/spf13/cobra"
 )
 
 const (
@@ -38,4 +39,15 @@ func (c ContextRequest) ToCommand() any {
 		Language:   c.Language.ToCommand().(lang.LanguagesQuery),
 		Intense:    c.Intense,
 	}
+}
+
+func (c *ContextRequest) Args(cmd *cobra.Command) {
+	cmd.Flags().
+		StringVar(&c.Intense, IntenseName, IntenseDefault, IntenseUsage)
+	cmd.Flags().
+		UintVar(&c.Identifier, IdentifierName, IdentifierDefault, IdentifierUsage)
+	cmd.Flags().
+		UintVar(&c.StreakDays, StreakDaysName, StreakDaysDefault, StreakDaysUsage)
+
+	c.Language.Args(cmd)
 }

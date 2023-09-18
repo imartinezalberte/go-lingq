@@ -1,10 +1,13 @@
 package logger
 
-import "go.uber.org/zap"
+import (
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+)
 
-func DefaultLogger() ILogger {
+func DefaultLogger(level zapcore.Level) ILogger {
 	config := zap.NewProductionConfig()
-	config.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
+	config.Level = zap.NewAtomicLevelAt(level)
 	l, err := config.Build(zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel))
 	if err != nil {
 		panic(err)

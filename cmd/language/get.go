@@ -27,10 +27,7 @@ import (
 	"github.com/imartinezalberte/go-lingq/internal/rest"
 )
 
-var (
-	languageReq       LanguageRequest
-	languageSupported bool
-)
+var languageReq LanguageRequest
 
 // getLanguagesCmd represents the languages command
 var getLanguagesCmd = &cobra.Command{
@@ -38,13 +35,6 @@ var getLanguagesCmd = &cobra.Command{
 	Short: "Get languages from lingq library",
 	Long:  `Get languages from lingq library`,
 	Run: func(cmd *cobra.Command, _ []string) {
-		if !cmd.Flags().Changed(SupportedName) {
-			cmd.Println(languageReq.Supported)
-			languageReq.Supported = nil
-		} else {
-			*languageReq.Supported = languageSupported
-		}
-
 		languages, err := getLanguages()
 		utils.HandleResponse(cmd, languages, err)
 	},
@@ -68,18 +58,5 @@ func getLanguages() (any, error) {
 func init() {
 	cmd.RootCmd.AddCommand(languagesCmd)
 
-	Args(getLanguagesCmd, &languageReq, &languageSupported)
-}
-
-func Args(cmd *cobra.Command, target *LanguageRequest, languageSupported *bool) {
-	cmd.Flags().
-		StringVarP(&target.Title, TitleName, TitleShortName, TitleDefault, TitleUsage)
-	cmd.Flags().
-		StringVarP(&target.Code, CodeName, CodeShortName, CodeDefault, CodeUsage)
-	cmd.Flags().
-		BoolVarP(languageSupported, SupportedName, SupportedShortName, SupportedDefault, SupportedUsage)
-	cmd.Flags().
-		UintVarP(&target.ID, IDName, IDShortName, IDDefault, IDUsage)
-	cmd.Flags().
-		UintVarP(&target.KnownWords, KnownWordsName, KnownWordsShortName, KnownWordsDefault, KnownWordsUsage)
+	languageReq.Args(getLanguagesCmd)
 }

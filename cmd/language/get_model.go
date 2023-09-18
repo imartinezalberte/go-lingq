@@ -3,6 +3,7 @@ package language
 import (
 	lang "github.com/imartinezalberte/go-lingq/internal/language"
 	"github.com/imartinezalberte/go-lingq/internal/utils"
+	"github.com/spf13/cobra"
 )
 
 const (
@@ -35,7 +36,7 @@ const (
 type LanguageRequest struct {
 	Code       string
 	Title      string
-	Supported  *bool
+	Supported  bool
 	ID         uint
 	KnownWords uint
 }
@@ -45,10 +46,28 @@ func (l LanguageRequest) ToCommand() any {
 		return lang.LanguagesQuery{ID: l.ID}
 	}
 
+	supported := &l.Supported
+	if !getLanguagesCmd.Flags().Changed(SupportedName) {
+		supported = nil
+	}
+
 	return lang.LanguagesQuery{
 		Code:       l.Code,
 		Title:      l.Title,
-		Supported:  l.Supported,
+		Supported:  supported,
 		KnownWords: l.KnownWords,
 	}
+}
+
+func (l *LanguageRequest) Args(cmd *cobra.Command) {
+	cmd.Flags().
+		StringVarP(&l.Title, TitleName, TitleShortName, TitleDefault, TitleUsage)
+	cmd.Flags().
+		StringVarP(&l.Code, CodeName, CodeShortName, CodeDefault, CodeUsage)
+	cmd.Flags().
+		BoolVarP(&l.Supported, SupportedName, SupportedShortName, SupportedDefault, SupportedUsage)
+	cmd.Flags().
+		UintVarP(&l.ID, IDName, IDShortName, IDDefault, IDUsage)
+	cmd.Flags().
+		UintVarP(&l.KnownWords, KnownWordsName, KnownWordsShortName, KnownWordsDefault, KnownWordsUsage)
 }

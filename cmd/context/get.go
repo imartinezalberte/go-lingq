@@ -23,18 +23,13 @@ import (
 	contxt "context"
 
 	"github.com/imartinezalberte/go-lingq/cmd"
-	"github.com/imartinezalberte/go-lingq/cmd/language"
 	"github.com/imartinezalberte/go-lingq/cmd/utils"
 	"github.com/imartinezalberte/go-lingq/internal/config"
 	con "github.com/imartinezalberte/go-lingq/internal/context"
 	"github.com/imartinezalberte/go-lingq/internal/rest"
 )
 
-var (
-	contextReq ContextRequest
-
-	languageSupported bool
-)
+var contextReq ContextRequest
 
 // getContextCmd represents the context command
 var getContextCmd = &cobra.Command{
@@ -42,19 +37,13 @@ var getContextCmd = &cobra.Command{
 	Short: "Helps to retrieve the possible contexts which user can use",
 	Long:  `Helps to retrieve the possible contexts which user can use`,
 	Run: func(cmd *cobra.Command, _ []string) {
-		if !cmd.Flags().Changed(language.SupportedName) {
-			contextReq.Language.Supported = nil
-		} else {
-			*contextReq.Language.Supported = languageSupported
-		}
-
 		contexts, err := getContexts()
 		utils.HandleResponse(cmd, contexts, err)
 	},
 }
 
 func getContexts() (any, error) {
-	client, err := rest.DefaultClient(config.BaseURL)
+	client, err := rest.DefaultClient(config.BaseURLV2)
 	if err != nil {
 		return nil, err
 	}
@@ -70,17 +59,6 @@ func getContexts() (any, error) {
 
 func init() {
 	contextCmd.AddCommand(getContextCmd)
-	
-	Args(getContextCmd, &contextReq)
-}
 
-func Args(cmd *cobra.Command, target *ContextRequest) {
-	cmd.Flags().
-		StringVar(&target.Intense, IntenseName, IntenseDefault, IntenseUsage)
-	cmd.Flags().
-		UintVar(&target.Identifier, IdentifierName, IdentifierDefault, IdentifierUsage)
-	cmd.Flags().
-		UintVar(&target.StreakDays, StreakDaysName, StreakDaysDefault, StreakDaysUsage)
-
-	language.Args(cmd, &target.Language, &languageSupported)
+	contextReq.Args(getContextCmd)
 }
