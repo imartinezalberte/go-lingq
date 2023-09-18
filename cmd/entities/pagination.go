@@ -3,7 +3,7 @@ package entities
 import (
 	"fmt"
 
-	"github.com/imartinezalberte/go-lingq/internal/pagination"
+	e "github.com/imartinezalberte/go-lingq/internal/entities"
 	"github.com/spf13/cobra"
 )
 
@@ -25,11 +25,11 @@ func (p Pagination) String() string {
 	return fmt.Sprintf("page: %d, size: %d", p.Page, p.Size)
 }
 
-func (p Pagination) ToCommand() pagination.Pagination {
-	return pagination.NewPagination(p.Page, p.Size)
+func (p Pagination) ToCommand() e.Pagination {
+	return e.NewPagination(p.Page, p.Size)
 }
 
-func (Pagination) Args(cmd *cobra.Command, target *Pagination) {
-	cmd.Flags().UintVar(&target.Page, PageName, PageDefault, PageUsage)
-	cmd.Flags().UintVar(&target.Size, SizeName, SizeDefault, SizeUsage)
+func (p *Pagination) Args(cmd *cobra.Command) {
+	cmd.Flags().UintVar(&p.Page, PageName, PageDefault, PageUsage)
+	cmd.Flags().UintVar(&p.Size, SizeName, SizeDefault, SizeUsage)
 }

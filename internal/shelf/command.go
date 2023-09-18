@@ -4,7 +4,7 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/imartinezalberte/go-lingq/internal/pagination"
+	"github.com/imartinezalberte/go-lingq/internal/entities"
 	"github.com/imartinezalberte/go-lingq/internal/rest"
 	"github.com/repeale/fp-go"
 )
@@ -13,7 +13,7 @@ const LevelQueryParamName = "level"
 
 type ShelfQuery struct {
 	rest.GetDummyRequester
-	pagination.Pagination
+	entities.Pagination
 	Levels   []uint
 	Language string
 }

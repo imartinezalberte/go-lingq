@@ -19,7 +19,6 @@ import (
 	"time"
 
 	"github.com/imartinezalberte/go-lingq/cmd"
-	"github.com/imartinezalberte/go-lingq/cmd/entities"
 	shelfCmd "github.com/imartinezalberte/go-lingq/cmd/shelf"
 	"github.com/imartinezalberte/go-lingq/cmd/utils"
 	"github.com/imartinezalberte/go-lingq/internal/config"
@@ -58,16 +57,5 @@ func getShelves() (any, error) {
 
 func init() {
 	shelfCmd.ShelfCmd.AddCommand(getShelvesCmd)
-
-	Args(getShelvesCmd, &shelfRequest)
-}
-
-func Args(cmd *cobra.Command, target *ShelfRequest) {
-	cmd.Flags().
-		StringVar(&target.Language, LanguageName, LanguageDefault, LanguageUsage)
-	cmd.Flags().Var(&target.Levels, entities.LevelName, entities.LevelUsage)
-
-	target.Pagination.Args(cmd, &target.Pagination)
-
-	cmd.MarkFlagRequired(LanguageName)
+	shelfRequest.Args(getShelvesCmd)
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/imartinezalberte/go-lingq/internal/shelf"
 	"github.com/imartinezalberte/go-lingq/internal/utils"
 	"github.com/repeale/fp-go"
+	"github.com/spf13/cobra"
 )
 
 const (
@@ -36,4 +37,14 @@ func (s ShelfRequest) ToCommand() any {
 			return uint(level)
 		})(s.Levels.InnerType().ToArr()),
 	}
+}
+
+func (s *ShelfRequest) Args(cmd *cobra.Command) {
+	cmd.Flags().
+		StringVar(&s.Language, LanguageName, LanguageDefault, LanguageUsage)
+	cmd.Flags().Var(&s.Levels, entities.LevelName, entities.LevelUsage)
+
+	s.Pagination.Args(cmd)
+
+	cmd.MarkFlagRequired(LanguageName)
 }

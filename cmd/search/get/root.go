@@ -12,51 +12,51 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/package create
+*/
+package get
 
 import (
-	contxt "context"
+	"context"
 	"time"
 
 	"github.com/imartinezalberte/go-lingq/cmd"
-	"github.com/imartinezalberte/go-lingq/cmd/course"
+	searchCmd "github.com/imartinezalberte/go-lingq/cmd/search"
 	"github.com/imartinezalberte/go-lingq/cmd/utils"
 	"github.com/imartinezalberte/go-lingq/internal/config"
-	cour "github.com/imartinezalberte/go-lingq/internal/course"
 	"github.com/imartinezalberte/go-lingq/internal/rest"
+	"github.com/imartinezalberte/go-lingq/internal/search"
 	"github.com/spf13/cobra"
 )
 
-var courseReq CourseRequest
+var searchResources SearchResources
 
-// createCourseCmd represents the course command
-var createCourseCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Handle creation of courses on lingq",
-	Long:  `Handle creation of courses on lingq`,
+// GetSearchCmd represents the search command
+var GetSearchCmd = &cobra.Command{
+	Use:   "get",
+	Short: "",
+	Long:  ``,
 	Run: func(cmd *cobra.Command, _ []string) {
-		courseRes, err := postCourse()
-		utils.HandleResponse(cmd, courseRes, err)
+		resources, err := getResources()
+		utils.HandleResponse(cmd, resources, err)
 	},
 }
 
-func postCourse() (any, error) {
+func getResources() (any, error) {
 	client, err := rest.DefaultClient(config.BaseURL)
 	if err != nil {
 		return nil, err
 	}
 
-	repo := cour.NewRepo(client.SetHeader("Authorization", "Token "+cmd.Token))
-	service := cour.NewService(repo)
+	repo := search.NewRepo(client.SetHeader("Authorization", "Token "+cmd.Token))
+	service := search.NewService(repo)
 
-	ctx, cl := contxt.WithTimeout(contxt.Background(), 10*time.Second)
+	ctx, cl := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cl()
 
-	return cour.Execute(ctx, service, courseReq)
+	return search.Execute(ctx, service, searchResources)
 }
 
 func init() {
-	course.CourseCmd.AddCommand(createCourseCmd)
-
-	courseReq.Args(createCourseCmd)
+	searchCmd.SearchCmd.AddCommand(GetSearchCmd)
+	searchResources.Args(GetSearchCmd)
 }

@@ -7,21 +7,32 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/imartinezalberte/go-lingq/internal/rest"
 	"github.com/imartinezalberte/go-lingq/internal/utils"
+	"github.com/repeale/fp-go"
 )
 
 const ImageFileParamName string = "image"
 
-type CourseCommand struct {
-	rest.PostDummyRequester
-	Image       string
-	Title       string `example:"eventyr for barn"`
-	Language    string `example:"no"`
-	Description string `example:"Du vil lære å lese eventyr for barn"`
-	Level       uint   `example:"2"`
-	SourceURL   string `example:"https://www.barneforlaget.no/hør-så-mye-du-vil"`
-	Tags        Tags
-}
+type (
+	CourseCommand struct {
+		rest.PostDummyRequester
+		Image       string
+		Title       string `example:"eventyr for barn"`
+		Language    string `example:"no"`
+		Description string `example:"Du vil lære å lese eventyr for barn"`
+		Level       uint   `example:"2"`
+		SourceURL   string `example:"https://www.barneforlaget.no/hør-så-mye-du-vil"`
+		Tags        Tags
+	}
 
+	CourseQuery struct {
+		rest.GetDummyRequester
+		IDs      []uint
+		Title    string
+		Language string
+	}
+)
+
+// CourseCommand
 func (c CourseCommand) ToBody() (any, error) {
 	if c.Image != utils.Empty {
 		// We are not using simple json, we have to use multipart/form-data
@@ -68,3 +79,31 @@ func (c CourseCommand) FormData() url.Values {
 func (c CourseCommand) Files() map[string]string {
 	return map[string]string{ImageFileParamName: c.Image}
 }
+
+// CourseQuery
+func (c CourseQuery) ToQuery() (url.Values, error) {
+	if len(c.IDs) > 1 {
+		return map[string][]string{
+			CollectionQueryParam: fp.Map(func(id uint) string {
+				return strconv.Itoa(int(id))
+			})(c.IDs),
+		}, nil
+	}
+	return nil, rest.ErrUnimplementedMethod
+}
+
+func (c CourseQuery) ToPathParameter() (map[string]string, error) {
+	var courseID string
+	if len(c.IDs) == 1 {
+		courseID = strconv.Itoa(int(c.IDs[0]))
+	} else if len(c.IDs) > 1 {
+		courseID = "counters"
+	}
+
+	return map[string]string{
+		LanguageIDPathParam: c.Language,
+		CourseIDPathParam:   courseID,
+	}, nil
+}
+
+func (c CourseQuery) Filter() {}

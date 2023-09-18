@@ -13,7 +13,8 @@ type (
 	Tags []Tag
 	Tag  string
 
-	Course struct {
+	Courses []Course
+	Course  struct {
 		ID               uint    `json:"id"`
 		URL              string  `json:"url"`
 		Title            string  `json:"title"`
@@ -27,5 +28,24 @@ type (
 		SharedByImageURL string  `json:"sharedByImageUrl"`
 		Tags             Tags    `json:"tags"`
 		Type             string  `json:"type"`
+	}
+
+	CourseID       string
+	CounterCourses map[CourseID]CounterCourse
+	CounterCourse  struct {
+		CardsCount        uint    `json:"cardsCount"`
+		HasFlags          bool    `json:"hasFlags"`
+		KnownWordsCount   uint    `json:"knownWordsCount"`
+		TotalWordsCount   uint    `json:"totalWordsCount"`
+		RoseGiven         bool    `json:"roseGiven"`
+		RosesCount        uint    `json:"rosesCount"`
+		LessonsCount      uint    `json:"lessonsCount"`
+		Difficulty        float32 `json:"difficulty"`
+		IsTaken           bool    `json:"isTaken"`
+		NewWordsCount     uint    `json:"newWordsCount"`
+		CourseID          int     `json:"pk"`
+		Progress          any     `json:"progress"`
+		IsCompletelyTaken bool    `json:"isCompletelyTaken"`
+		UniqueWordsCount  uint    `json:"uniqueWordsCount"`
 	}
 )
