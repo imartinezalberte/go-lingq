@@ -7,6 +7,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/imartinezalberte/go-lingq/internal/rest"
 	"github.com/imartinezalberte/go-lingq/internal/utils"
+	"github.com/repeale/fp-go"
 )
 
 const ImageFileParamName string = "image"
@@ -25,7 +26,7 @@ type (
 
 	CourseQuery struct {
 		rest.GetDummyRequester
-		ID       uint
+		IDs      []uint
 		Title    string
 		Language string
 	}
@@ -80,4 +81,29 @@ func (c CourseCommand) Files() map[string]string {
 }
 
 // CourseQuery
+func (c CourseQuery) ToQuery() (url.Values, error) {
+	if len(c.IDs) > 1 {
+		return map[string][]string{
+			CollectionQueryParam: fp.Map(func(id uint) string {
+				return strconv.Itoa(int(id))
+			})(c.IDs),
+		}, nil
+	}
+	return nil, rest.ErrUnimplementedMethod
+}
+
+func (c CourseQuery) ToPathParameter() (map[string]string, error) {
+	var courseID string
+	if len(c.IDs) == 1 {
+		courseID = strconv.Itoa(int(c.IDs[0]))
+	} else if len(c.IDs) > 1 {
+		courseID = "counters"
+	}
+
+	return map[string]string{
+		LanguageIDPathParam: c.Language,
+		CourseIDPathParam:   courseID,
+	}, nil
+}
+
 func (c CourseQuery) Filter() {}

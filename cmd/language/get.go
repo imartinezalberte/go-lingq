@@ -51,7 +51,7 @@ var getLanguagesCmd = &cobra.Command{
 }
 
 func getLanguages() (any, error) {
-	client, err := rest.DefaultClient(config.BaseURL)
+	client, err := rest.DefaultClient(config.BaseURLV2)
 	if err != nil {
 		return nil, err
 	}

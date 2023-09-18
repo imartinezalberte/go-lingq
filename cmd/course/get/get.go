@@ -12,7 +12,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/package create
+*/package get
 
 import (
 	contxt "context"
@@ -27,20 +27,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var courseReq CourseRequest
+var coursesReq CoursesRequest
 
-// createCourseCmd represents the course command
-var createCourseCmd = &cobra.Command{
-	Use:   "create",
+// getCoursesCmd represents the course command
+var getCoursesCmd = &cobra.Command{
+	Use:   "get",
 	Short: "Handle creation of courses on lingq",
 	Long:  `Handle creation of courses on lingq`,
 	Run: func(cmd *cobra.Command, _ []string) {
-		courseRes, err := postCourse()
+		courseRes, err := getCourses()
 		utils.HandleResponse(cmd, courseRes, err)
 	},
 }
 
-func postCourse() (any, error) {
+func getCourses() (any, error) {
 	client, err := rest.DefaultClient(config.BaseURL)
 	if err != nil {
 		return nil, err
@@ -52,11 +52,11 @@ func postCourse() (any, error) {
 	ctx, cl := contxt.WithTimeout(contxt.Background(), 10*time.Second)
 	defer cl()
 
-	return cour.Execute(ctx, service, courseReq)
+	return cour.Execute(ctx, service, coursesReq)
 }
 
 func init() {
-	course.CourseCmd.AddCommand(createCourseCmd)
+	course.CourseCmd.AddCommand(getCoursesCmd)
 
-	courseReq.Args(createCourseCmd)
+	coursesReq.Args(getCoursesCmd)
 }

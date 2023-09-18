@@ -80,6 +80,7 @@ func (r ResourceLevel) ToDomain() (level e.ResourceLevel, err error) {
 
 func (r *ResourceLevel) Args(cmd *cobra.Command) {
 	cmd.Flags().Var(r, LevelName, LevelUsage)
+	cmd.MarkFlagRequired(LevelName)
 	cmd.RegisterFlagCompletionFunc(
 		ResourceStatusName,
 		func(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {

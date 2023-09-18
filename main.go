@@ -21,6 +21,7 @@ import (
 	_ "github.com/imartinezalberte/go-lingq/cmd/context"
 	_ "github.com/imartinezalberte/go-lingq/cmd/course"
 	_ "github.com/imartinezalberte/go-lingq/cmd/course/create"
+	_ "github.com/imartinezalberte/go-lingq/cmd/course/get"
 	_ "github.com/imartinezalberte/go-lingq/cmd/language"
 	_ "github.com/imartinezalberte/go-lingq/cmd/search"
 	_ "github.com/imartinezalberte/go-lingq/cmd/search/get"

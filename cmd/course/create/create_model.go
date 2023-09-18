@@ -1,13 +1,11 @@
 package create
 
 import (
-	"errors"
-	"reflect"
-	"strings"
-
+	"github.com/imartinezalberte/go-lingq/cmd/entities"
 	cour "github.com/imartinezalberte/go-lingq/internal/course"
 	"github.com/imartinezalberte/go-lingq/internal/utils"
 	"github.com/repeale/fp-go"
+	"github.com/spf13/cobra"
 )
 
 const (
@@ -27,10 +25,6 @@ const (
 	DescriptionUsage   = "Specify here a description. It's optional. Max lenght must be	200 characters"
 	DescriptionDefault = utils.Empty
 
-	LevelName                  = "level"
-	LevelUsage                 = "Specify here the level of your course."
-	LevelDefault ResourceLevel = FirstLevel
-
 	SourceURLName    = "source-url"
 	SourceURLUsage   = "Specify the source URL of the course if appropiate"
 	SourceURLDefault = utils.Empty
@@ -39,66 +33,12 @@ const (
 	TagsUsage = "Specify zero or more tags to classify the course. By default, empty"
 )
 
-type ResourceLevel uint
-
-const (
-	_ ResourceLevel = iota
-	FirstLevel
-	SecondLevel
-	ThirdLevel
-	FourthLevel
-	FifthLevel
-	SixthLevel
-)
-
-var Levels = [...]string{"A1", "A2", "B1", "B2", "C1", "C2"}
-
-func (r *ResourceLevel) Type() string {
-	return reflect.Uint.String()
-}
-
-func (r ResourceLevel) String() string {
-	index := int(r) - 1
-	if index >= len(Levels) || index < 0 {
-		return "unknown"
-	}
-
-	return Levels[index]
-}
-
-func (r *ResourceLevel) Set(input string) error {
-	if !r.Check(input) {
-		return errors.New("resource level is not correct")
-	}
-	return nil
-}
-
-func (r *ResourceLevel) Check(input string) bool {
-	switch strings.ToUpper(input) {
-	case Levels[0]:
-		*r = FirstLevel
-	case Levels[1]:
-		*r = SecondLevel
-	case Levels[2]:
-		*r = ThirdLevel
-	case Levels[3]:
-		*r = FourthLevel
-	case Levels[4]:
-		*r = FifthLevel
-	case Levels[5]:
-		*r = SixthLevel
-	default:
-		return false
-	}
-	return true
-}
-
 type CourseRequest struct {
 	Image       string
 	Title       string
 	Language    string
 	Description string
-	Level       ResourceLevel
+	Level       entities.ResourceLevel
 	SourceURL   string
 	Tags        []string
 }
@@ -115,4 +55,25 @@ func (c CourseRequest) ToCommand() any {
 			return cour.Tag(input)
 		})(c.Tags),
 	}
+}
+
+func (c *CourseRequest) Args(cmd *cobra.Command) {
+	c.Level.Args(cmd)
+
+	cmd.Flags().
+		StringVar(&c.Title, TitleName, TitleDefault, TitleUsage)
+	cmd.Flags().
+		StringVar(&c.Language, LanguageName, LanguageDefault, LanguageUsage)
+	cmd.Flags().
+		StringVar(&c.Description, DescriptionName, DescriptionDefault, DescriptionUsage)
+	cmd.Flags().
+		StringVar(&c.SourceURL, SourceURLName, SourceURLDefault, SourceURLUsage)
+	cmd.Flags().
+		StringSliceVar(&c.Tags, TagsName, []string{}, TagsUsage)
+	cmd.Flags().StringVar(&c.Image, ImageName, ImageDefault, ImageUsage)
+
+	cmd.MarkFlagFilename(ImageName)
+
+	cmd.MarkFlagRequired(TitleName)
+	cmd.MarkFlagRequired(LanguageName)
 }

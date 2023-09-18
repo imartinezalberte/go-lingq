@@ -8,6 +8,11 @@ import (
 )
 
 func HandleResponse(cmd *cobra.Command, response any, err error) {
+	if response == nil {
+		cmd.PrintErrln("no response")
+		return
+	}
+
 	if err != nil {
 		cmd.PrintErrln(err)
 		return
