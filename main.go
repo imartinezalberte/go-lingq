@@ -18,6 +18,8 @@ package main
 import (
 	"github.com/imartinezalberte/go-lingq/cmd"
 
+	_ "github.com/imartinezalberte/go-lingq/cmd/activity"
+	_ "github.com/imartinezalberte/go-lingq/cmd/activity/get"
 	_ "github.com/imartinezalberte/go-lingq/cmd/context"
 	_ "github.com/imartinezalberte/go-lingq/cmd/course"
 	_ "github.com/imartinezalberte/go-lingq/cmd/course/create"
